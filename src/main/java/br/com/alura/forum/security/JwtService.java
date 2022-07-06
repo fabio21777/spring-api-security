@@ -37,4 +37,9 @@ public class JwtService {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(header);
             return true;
     }
+
+
+    public Long getIdUsuario(String header) {
+        return Long.parseLong(Jwts.parser().setSigningKey(secret).parseClaimsJws(header).getBody().getSubject());
+    }
 }

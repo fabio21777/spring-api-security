@@ -1,5 +1,6 @@
 package br.com.alura.forum.security;
 
+import br.com.alura.forum.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,9 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
     @Autowired
     JwtService jwtService;
     //Configuração de autenticação
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(autenticacaoService).passwordEncoder(new BCryptPasswordEncoder());
@@ -38,7 +42,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().addFilterBefore(new AutenticacaoTokenFiltro(jwtService), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new AutenticacaoTokenFiltro(jwtService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
